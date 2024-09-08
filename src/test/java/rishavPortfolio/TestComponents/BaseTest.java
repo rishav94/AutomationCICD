@@ -3,6 +3,8 @@ package rishavPortfolio.TestComponents;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
@@ -17,6 +19,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
@@ -35,28 +39,49 @@ public class BaseTest {
 	public WebDriver driver;
 	public LandingPage landingPage;
 
-	public WebDriver initlizeDriver() throws IOException {
+	public WebDriver initlizeDriver() throws IOException, URISyntaxException {
 		// properties class
 
 		Properties property = new Properties();
 		FileInputStream fil = new FileInputStream(System.getProperty("user.dir")
 				+ "//src//test//java//rishavPortfolio//Resources//GlobalData.properties");
 		property.load(fil);
-		String browserName = System.getProperty("Browser")!=null ? System.getProperty("Browser"):property.getProperty("Browser");
-				//property.getProperty("Browser");
+		String browserName = System.getProperty("Browser") != null ? System.getProperty("Browser")
+				: property.getProperty("Browser");
+
+		String hubLink = System.getProperty("HubLink") != null ? System.getProperty("HubLink")
+				: property.getProperty("HubLink");
+		DesiredCapabilities caps = new DesiredCapabilities();
 
 		if (browserName.contains("chrome")) {
-			ChromeOptions options=new ChromeOptions();
-			if (browserName.contains("headless")){
-			options.addArguments("headless");
+			if (System.getProperty("HubLink") != null) {
+				caps.setBrowserName("chrome");
+				//run headless test on Grid node
+				if (browserName.contains("headless")) {
+					caps.setCapability("headless", true);
+				}
+				driver = new RemoteWebDriver(new URI(hubLink).toURL(), caps);
+			} else {
+				ChromeOptions options = new ChromeOptions();
+				if (browserName.contains("headless")) {
+					options.addArguments("headless");
+				}
+				driver = new ChromeDriver(options);
+				driver.manage().window().setSize(new Dimension(1440, 900)); // fullscreen
 			}
-			driver = new ChromeDriver(options);
-			driver.manage().window().setSize(new Dimension(1440,900)); //fullscreen
+
 		}
 
 		else if (browserName.equalsIgnoreCase("firefox")) {
-			System.getProperty("webdriver.gecko.driver","H://eclipse/geckodriver.exe");	
-		      driver = new FirefoxDriver();
+
+			// check if hublink is available else run remotely
+			if (System.getProperty("HubLink") != null) {
+				caps.setBrowserName("firefox");
+				driver = new RemoteWebDriver(new URI(hubLink).toURL(), caps);
+			} else {
+				System.getProperty("webdriver.gecko.driver", "H://eclipse/geckodriver.exe");
+				driver = new FirefoxDriver();
+			}
 
 		}
 
@@ -76,7 +101,7 @@ public class BaseTest {
 				});
 		return data;
 	}
-	
+
 	// take Screenshot
 	public String getScreenshot(String testCaseName) throws IOException {
 		TakesScreenshot ts = (TakesScreenshot) driver;
@@ -88,7 +113,7 @@ public class BaseTest {
 	}
 
 	@BeforeMethod(alwaysRun = true)
-	public LandingPage launchApplication() throws IOException {
+	public LandingPage launchApplication() throws IOException, URISyntaxException {
 		driver = initlizeDriver();
 		landingPage = new LandingPage(driver);
 		landingPage.goTo();
@@ -99,7 +124,5 @@ public class BaseTest {
 	public void closebrowser() {
 		driver.quit();
 	}
-
-
 
 }

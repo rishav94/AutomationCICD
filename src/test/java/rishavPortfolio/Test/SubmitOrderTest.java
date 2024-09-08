@@ -47,9 +47,9 @@ public class SubmitOrderTest extends BaseTest {
 
 	}
 	
-	  @Test(dependsOnMethods= {"submitOrder()"}) public void CheckOrder() {
-	  ProductCatalogue productCatalogue
-	  =landingPage.landingPageApplication("testperson@test.com","Iamking@000");
+	  @Test(dependsOnMethods= {"submitOrder()"}) 
+	  public void CheckOrder() {
+	  ProductCatalogue productCatalogue=landingPage.landingPageApplication("testperson@test.com","Iamking@000");
 	  OrderPage orderpage=productCatalogue.goToOrder();
 	  Assert.assertTrue(orderpage.verifyOrderDisplay(productName1)); }
 	 

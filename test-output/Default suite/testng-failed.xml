@@ -3,13 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="rishavPortfolio.Test.SubmitOrderTest">
+      <class name="rishavPortfolio.Test.DeleteOrders">
         <methods>
           <include name="launchApplication"/>
           <include name="closebrowser"/>
-          <include name="submitOrder"/>
+          <include name="DeleteOrders"/>
         </methods>
-      </class> <!-- rishavPortfolio.Test.SubmitOrderTest -->
+      </class> <!-- rishavPortfolio.Test.DeleteOrders -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

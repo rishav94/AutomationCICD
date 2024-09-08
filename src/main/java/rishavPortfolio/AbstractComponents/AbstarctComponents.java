@@ -19,11 +19,14 @@ public class AbstarctComponents {
 		this.driver= driver;
 		PageFactory.initElements(driver, this);
 	}
-	@FindBy(css="button[routerlink*='cart']")
+	@FindBy(css="button[routerlink*='cart']") // Cart button
 	WebElement cartHeader;
 	
-	@FindBy(css="button[routerlink*='myorders']")
+	@FindBy(css="button[routerlink*='myorders']") // myorder button
 	WebElement orderHeader;
+	
+	@FindBy(css="button[routerlink*='cart'] label")// total number of orders 
+	WebElement totalNumberOfOrder;
 	
 	public CartPage goToCart() {
 		cartHeader.click();
@@ -37,6 +40,12 @@ public class AbstarctComponents {
 		return orderPage;
 		
 	}
+	
+	public String getTotalNumberOfORders() {
+		String totalOrders= totalNumberOfOrder.getText();
+		return totalOrders;
+	}
+	
 	// explicit wait for Element
 	public void waitForElementToAppear(By findBy) {
 	WebDriverWait wait= new WebDriverWait(driver,Duration.ofSeconds(10));
@@ -54,4 +63,6 @@ public class AbstarctComponents {
 		WebDriverWait wait= new WebDriverWait(driver,Duration.ofSeconds(10));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(findBy));
 	}
+	
+	
 }

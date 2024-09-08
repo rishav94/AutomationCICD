@@ -8,6 +8,7 @@
 	<test thread-count="5" name="Submit Order Test">
 		<classes>
 			<class name="rishavPortfolio.Test.SubmitOrderTest" />
+			<class name="rishavPortfolio.Test.SelectAndDeleteOrders" />
 		</classes>
 	</test> <!--
 	Test -->
